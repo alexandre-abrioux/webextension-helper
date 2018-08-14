@@ -44,6 +44,7 @@ helper/sign.sh
 
 - install the composer dependencies
 ```
+cd helper
 composer install
 ```
 - make `helper/public` available on your web server

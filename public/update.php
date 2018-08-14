@@ -1,8 +1,9 @@
 <?php
 
-require __DIR__ . '../includes.php';
+require __DIR__ . '/../includes.php';
 
-$json = ['addons'];
+$json = new stdClass();
+$json->addons = new stdClass();
 $extensionManifestFile = $extensionSrcDir . '/manifest.json';
 $extensionIdFile = $extensionSrcDir . '/.web-extension-id';
 $extensionId = null;
@@ -19,18 +20,21 @@ if (is_file($extensionManifestFile)) {
     }
 }
 if (!empty($extensionId)) {
-    $json['addons'][$extensionId]['updates'] = [];
+    $json->addons->{$extensionId} = new stdClass();
+    $json->addons->{$extensionId}->updates = [];
     if (!empty($extensionVersion)) {
         $extensionFile = glob($extensionDistDir . '/*-' . $extensionVersion . '-*.xpi');
         if (!empty($extensionFile)) {
             $extensionFile = $extensionFile[0];
             $extensionFileName = basename($extensionFile);
-            $json['addons'][$extensionId]['updates'][] = [
-                'version' => $extensionVersion,
-                'update_link' => ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/download.php?file=' . urlencode($extensionFileName),
-                'update_hash' => hash_file('sha256', $extensionFile)
-            ];
+            $version = new stdClass();
+            $version->version = $extensionVersion;
+            $version->update_hash = 'sha256:' . hash_file('sha256', $extensionFile);
+            $version->update_link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/download.php?file=' . urlencode($extensionFileName);
+            $json->addons->{$extensionId}->updates[] = $version;
         }
     }
 }
+
+header('Content-Type: application/json');
 echo json_encode($json);
