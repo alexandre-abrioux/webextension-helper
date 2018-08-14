@@ -14,10 +14,11 @@ See https://github.com/mozilla/web-ext
 ```
 cd /home/<username>/dev/webextension
 ```
-- move all sources to a new subdirectory `src`
+- move all sources to a new subdirectory `src`. If you already used web-ext in this directory before you should also move your add-on id file.
 ```
 mkdir src
 mv !(src) src
+[ -f .web-extension-id ] && mv .web-extension-id src
 ```
 - clone this repository as a submodule of the webextension
 ```

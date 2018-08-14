@@ -1,6 +1,5 @@
 module.exports = {
-    // Global options:
-    artifactsDir: './public/dist',
+    artifactsDir: './../dist',
     sourceDir: './../src',
     build: {
         overwriteDest: true
