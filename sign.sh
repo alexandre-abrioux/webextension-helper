@@ -5,5 +5,5 @@ if [ ! -f .env ]; then
     echo 'No config file found. Copy "helper/.env.dist" to "helper/.env" and edit it.'
     exit 1
 fi
-source .env
+export $(grep -v '^#' .env | xargs)
 web-ext sign

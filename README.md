@@ -34,7 +34,7 @@ vim helper/.env
 ```
 ## Signing your Webextension
 
-Simply run `helper/sign.sh`. You may need to fix the script permissions.
+Simply run `./helper/sign.sh`. You may need to fix the script permissions.
 ```
 chmod +x helper/sign.sh
 helper/sign.sh
