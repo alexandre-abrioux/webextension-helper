@@ -1,4 +1,4 @@
 <?php
 
-$extensionSrcDir = __DIR__ . '/' . $_ENV['WEB_EXT_SOURCE_DIR'];
-$extensionDistDir = __DIR__ . '/' . $_ENV['WEB_EXT_ARTIFACTS_DIR'];
+$extensionSrcDir = __DIR__ . '/' . getenv('WEB_EXT_SOURCE_DIR');
+$extensionDistDir = __DIR__ . '/' . getenv('WEB_EXT_ARTIFACTS_DIR');
