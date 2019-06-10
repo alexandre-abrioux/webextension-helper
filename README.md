@@ -1,58 +1,83 @@
 # webextension helper
-Speed up the distribution of self-hosted webextensions in Firefox.
 
-## <a name="dependencies"></a>Dependencies
-This tool relies on web-ext to sign your webextension on [AMO](https://addons.mozilla.org/).
-```
-npm install --global web-ext
-```
-See https://github.com/mozilla/web-ext
+Speed up the distribution of self-hosted Firefox webextensions
+
+- provides a lightweight web service to serve your JSON update manifest ;
+- ease the usage of [`web-ext`](https://github.com/mozilla/web-ext) via a simple docker image
+to sign your webextension on [AMO](https://addons.mozilla.org/)
+
+## Dependencies
+
+This tool relies on `docker` and `docker-compose`.
+See https://docs.docker.com/compose/install/
+
+Some shortcuts are provided by a `Makefile`.
+You will need `make` to use them, but the tool is not mandatory.
 
 ## Installation
 
-- navigate to the webextension directory
+- navigate to your webextension's project directory
+
 ```
 cd /home/<username>/dev/webextension
 ```
-- move all sources to a new subdirectory `src`. If you already used web-ext in this directory before you should also move your add-on id file.
+
+- move all sources to a new subdirectory `src`.
+If you already used the `web-ext` npm package in this directory before you should also move your add-on id file.
+
 ```
 mkdir src
 mv !(src) src
 [ -f .web-extension-id ] && mv .web-extension-id src
 ```
 - clone this repository as a submodule of the webextension
+
 ```
 git submodule add git@github.com:alexandre-abrioux/webextension-helper.git helper
 ```
-- install web-ext (see [Dependencies](#dependencies) section)
+
 - copy `helper/.env.dist` to `helper/.env` and fill in your [Mozilla API credentials](https://addons.mozilla.org/en-US/developers/addon/api/key/).
-You can find all the options available on the [web-ext reference page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/web-ext_command_reference).
-Note that you can also extend those parameters with a global configuration by using a file in your home directory `/home/<username>/.web-ext-config.js` as stated in the [web-ext documentation](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext#Automatic_discovery_of_configuration_files).
+You can find all the available options on the [web-ext reference page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/web-ext_command_reference).
+
 ```
 cp helper/.env.dist helper/.env
 vim helper/.env
 ```
-## Signing your Webextension
 
-Simply run `./helper/sign.sh`. You may need to fix the script permissions.
-```
-chmod +x helper/sign.sh
-helper/sign.sh
-```
+## Signing your Web-Extension
+
+Simply run `make sign`.
+
+## Updating Mozilla's `web-ext` Tool
+
+To rebuild the `web-ext` docker image you can run `make update`.
 
 ## Enabling Auto-Updates
 
-- install the composer dependencies
-```
-cd helper
-composer install
-```
-- make `helper/public` available on your web server
-- use `helper/public/update.php` in the webextension's manifest file
+- configure your webextension's manifest file to target the `update.php` script
 ```
 "applications": {
   "gecko": {
-    "update_url": "https://example.com/updates.php"
+    "update_url": "https://webextension-helper.example.com/updates.php"
   }
 }
 ```
+
+- use the `docker-compose.yml` file to start the web service on your server
+
+```
+make up
+```
+
+## Makefile
+
+Some shortcuts are configured in a `Makefile`. Use `make help` for more informations.
+
+- `make help`
+- `make build`
+- `make up`
+- `make stop`
+- `make down`
+- `make restart`
+- `make sign`
+- `make update`

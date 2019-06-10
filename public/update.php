@@ -30,7 +30,7 @@ if (!empty($extensionId)) {
             $version = new stdClass();
             $version->version = $extensionVersion;
             $version->update_hash = 'sha256:' . hash_file('sha256', $extensionFile);
-            $version->update_link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/download.php?file=' . urlencode($extensionFileName);
+            $version->update_link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/') . '/download.php?file=' . urlencode($extensionFileName);
             $json->addons->{$extensionId}->updates[] = $version;
         }
     }

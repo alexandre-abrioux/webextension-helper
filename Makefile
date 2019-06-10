@@ -1,0 +1,29 @@
+SHELL := /bin/bash
+.PHONY: help build up stop down restart sign update
+.DEFAULT_GOAL := help
+
+include .env
+
+help:		## This help message
+	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
+
+build: 		## Buid docker services
+	docker-compose build
+
+up: 		## Deploy docker services
+	docker-compose up -d --remove-orphans
+
+stop: 		## Stop docker services
+	docker-compose stop
+
+down: 		## Remove docker services
+	docker-compose down --volumes
+
+restart: 	## Restart docker services
+	docker-compose restart
+
+sign:		## Sign the webextension with Mozilla's web-ext tool
+	bin/sign
+
+update:		## Update Mozilla's web-ext tool
+	docker-compose build --no-cache web-ext

@@ -1,0 +1,48 @@
+version: '3.7'
+
+networks:
+  reverse-proxy:
+    external: true
+    name: ${COMPOSE_NETWORK_REVERSE_PROXY}
+  back:
+    internal: true
+
+services:
+
+  nginx:
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    image: webextension-helper/nginx
+    build: docker/nginx
+    restart: always
+    networks:
+      - reverse-proxy
+      - back
+    depends_on:
+      - php
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${HOSTNAME}"
+      - "traefik.docker.network=${COMPOSE_NETWORK_REVERSE_PROXY}"
+      - "traefik.port=80"
+
+  php:
+    container_name: ${COMPOSE_PROJECT_NAME}_php
+    image: webextension-helper/php
+    build: docker/php
+    restart: always
+    networks:
+      - back
+    volumes:
+      - ..:/usr/src/app/
+    environment:
+      - WEB_EXT_ARTIFACTS_DIR=${WEB_EXT_ARTIFACTS_DIR}
+      - WEB_EXT_SOURCE_DIR=${WEB_EXT_SOURCE_DIR}
+
+  web-ext:
+    container_name: ${COMPOSE_PROJECT_NAME}_web-ext
+    image: webextension-helper/web-ext
+    build: docker/web-ext
+    volumes:
+      - ..:/usr/src/app/
+    env_file:
+      - .env

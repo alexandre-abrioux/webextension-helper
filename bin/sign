@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
+set -e
+
 ROOT=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd`
-cd ${ROOT}
+cd ${ROOT}/../
+
 if [ ! -f .env ]; then
     echo 'No config file found. Copy "helper/.env.dist" to "helper/.env" and edit it.'
     exit 1
 fi
-export $(grep -v '^#' .env | xargs)
-web-ext sign
+
+docker-compose run --rm web-ext sign

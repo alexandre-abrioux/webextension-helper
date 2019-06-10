@@ -1,6 +1,5 @@
-.idea
-vendor
-public/dist
-.env
-web-ext-config.js
-composer.lock
+/vendor/
+/public/dist/
+/.env
+/web-ext-config.js
+/composer.lock
