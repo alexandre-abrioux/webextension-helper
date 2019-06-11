@@ -71,7 +71,7 @@ make up
 
 ## Makefile
 
-Some shortcuts are configured in a `Makefile`. Use `make help` for more informations.
+Some shortcuts are configured in a `Makefile`. Use `make help` for more information.
 
 - `make help`
 - `make build`
