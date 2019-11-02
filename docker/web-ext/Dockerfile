@@ -6,5 +6,5 @@ ENV PATH=$PATH:/home/node/.npm-global/bin
 WORKDIR /usr/src/app/
 USER node
 
-ENTRYPOINT ["web-ext", "--artifacts-dir=/usr/src/app/dist", "--source-dir=/usr/src/app/src"]
+ENTRYPOINT ["web-ext"]
 RUN npm install --global web-ext
