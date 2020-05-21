@@ -29,7 +29,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_php
     image: webextension-helper/php
     build: docker/php
-    restart: always
+    restart: ${COMPOSE_RESTART}
     networks:
       - back
     volumes:
