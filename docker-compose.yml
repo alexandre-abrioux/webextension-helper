@@ -21,9 +21,12 @@ services:
       - php
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${HOSTNAME}"
       - "traefik.docker.network=${COMPOSE_NETWORK_REVERSE_PROXY}"
-      - "traefik.port=80"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.entrypoints=web"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.entrypoints=websecure"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=80"
 
   php:
     container_name: ${COMPOSE_PROJECT_NAME}_php
