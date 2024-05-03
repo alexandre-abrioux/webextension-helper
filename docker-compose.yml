@@ -45,6 +45,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_web-ext
     image: webextension-helper/web-ext
     build: docker/web-ext
+    restart: no
     volumes:
       - ..:/usr/src/app/
     env_file:

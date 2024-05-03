@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-include .env
+include .env.dist
+-include .env
 
 .PHONY: help
 help:		## This help message
