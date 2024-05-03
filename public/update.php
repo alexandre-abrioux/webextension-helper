@@ -23,7 +23,7 @@ if (!empty($extensionId)) {
     $json->addons->{$extensionId} = new stdClass();
     $json->addons->{$extensionId}->updates = [];
     if (!empty($extensionVersion)) {
-        $extensionFile = glob($extensionDistDir . '/*-' . $extensionVersion . '-*.xpi');
+        $extensionFile = glob($extensionDistDir . '/*-' . $extensionVersion . '.xpi');
         if (!empty($extensionFile)) {
             $extensionFile = $extensionFile[0];
             $extensionFileName = basename($extensionFile);
