@@ -3,6 +3,7 @@ SHELL := /bin/bash
 
 include .env.dist
 -include .env
+export
 
 .PHONY: help
 help:		## This help message
