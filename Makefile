@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 
 include .env.dist
@@ -11,28 +11,28 @@ help:		## This help message
 
 .PHONY: build
 build: 		## Buid docker services
-	docker-compose build
+	docker compose build
 
 .PHONY: up
 up: 		## Deploy docker services
-	docker-compose up -d --remove-orphans
+	docker compose up -d --remove-orphans
 
 .PHONY: stop
 stop: 		## Stop docker services
-	docker-compose stop
+	docker compose stop
 
 .PHONY: down
 down: 		## Remove docker services
-	docker-compose down --volumes
+	docker compose down --volumes
 
 .PHONY: restart
 restart: 	## Restart docker services
-	docker-compose restart
+	docker compose restart
 
 .PHONY: sign
 sign:		## Sign the webextension with Mozilla's web-ext tool
-	bin/sign
+	bin/sign $(ARGS)
 
 .PHONY: update
 update:		## Update Mozilla's web-ext tool
-	docker-compose build --no-cache web-ext
+	docker compose build --no-cache web-ext

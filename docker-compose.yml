@@ -1,5 +1,3 @@
-version: '3.7'
-
 networks:
   reverse-proxy:
     external: true
@@ -48,5 +46,9 @@ services:
     restart: no
     volumes:
       - ..:/usr/src/app/
-    env_file:
-      - .env
+    environment:
+      - WEB_EXT_API_KEY=${WEB_EXT_API_KEY}
+      - WEB_EXT_API_SECRET=${WEB_EXT_API_SECRET}
+      - WEB_EXT_ARTIFACTS_DIR=${WEB_EXT_ARTIFACTS_DIR}
+      - WEB_EXT_SOURCE_DIR=${WEB_EXT_SOURCE_DIR}
+      - WEB_EXT_CHANNEL=${WEB_EXT_CHANNEL}
