@@ -6,7 +6,6 @@ networks:
     internal: true
 
 services:
-
   nginx:
     container_name: ${COMPOSE_PROJECT_NAME}_nginx
     image: webextension-helper/nginx
@@ -25,6 +24,10 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.rule=Host(`${HOSTNAME}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.entrypoints=websecure"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=80"
+      # Strip the "Server: nginx" header (cannot be removed by open-source nginx itself)
+      - "traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-hide-server.headers.customresponseheaders.Server="
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.middlewares=${COMPOSE_PROJECT_NAME}-hide-server"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-https.middlewares=${COMPOSE_PROJECT_NAME}-hide-server"
 
   php:
     container_name: ${COMPOSE_PROJECT_NAME}_php
@@ -36,6 +39,7 @@ services:
     volumes:
       - ..:/usr/src/app/
     environment:
+      - HOSTNAME=${HOSTNAME}
       - WEB_EXT_ARTIFACTS_DIR=${WEB_EXT_ARTIFACTS_DIR}
       - WEB_EXT_SOURCE_DIR=${WEB_EXT_SOURCE_DIR}
 

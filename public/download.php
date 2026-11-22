@@ -2,9 +2,15 @@
 
 require __DIR__ . '/../includes.php';
 
-if (empty($_GET['file'])
-    || !preg_match('#^[A-Za-z0-9_\-.+]+\.xpi$#', $_GET['file'])
-    || !is_file($file = $extensionDistDir . '/' . $_GET['file']))
+if (!isset($_GET['file']) || !is_string($_GET['file'])
+    || !preg_match('#^[A-Za-z0-9_\-.+]+\.xpi\z#', $_GET['file']))
+    exit;
+
+// Resolve symlinks and ensure the file really lives in the artifacts dir
+$file = realpath($extensionDistDir . '/' . $_GET['file']);
+if ($file === false
+    || strpos($file, $extensionDistDir . DIRECTORY_SEPARATOR) !== 0
+    || !is_file($file))
     exit;
 
 header('Content-Description: File Transfer');

@@ -2,6 +2,11 @@
 
 require __DIR__ . '/../includes.php';
 
+// Use the configured public hostname, not the client-controlled Host header
+$hostname = getenv('HOSTNAME');
+if ($hostname === false || !preg_match('#^[A-Za-z0-9.\-]+(:[0-9]+)?\z#', $hostname))
+    exit;
+
 $json = new stdClass();
 $json->addons = new stdClass();
 $extensionManifestFile = $extensionSrcDir . '/manifest.json';
@@ -22,7 +27,7 @@ if (is_file($extensionManifestFile)) {
 if (!empty($extensionId)) {
     $json->addons->{$extensionId} = new stdClass();
     $json->addons->{$extensionId}->updates = [];
-    if (!empty($extensionVersion)) {
+    if (is_string($extensionVersion) && preg_match('#^[0-9A-Za-z.+\-]+\z#', $extensionVersion)) {
         $extensionFile = glob($extensionDistDir . '/*-' . $extensionVersion . '.xpi');
         if (!empty($extensionFile)) {
             $extensionFile = $extensionFile[0];
@@ -30,7 +35,7 @@ if (!empty($extensionId)) {
             $version = new stdClass();
             $version->version = $extensionVersion;
             $version->update_hash = 'sha256:' . hash_file('sha256', $extensionFile);
-            $version->update_link = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/') . '/download.php?file=' . urlencode($extensionFileName);
+            $version->update_link = 'https://' . $hostname . rtrim(dirname($_SERVER['PHP_SELF']), '/') . '/download.php?file=' . urlencode($extensionFileName);
             $json->addons->{$extensionId}->updates[] = $version;
         }
     }
